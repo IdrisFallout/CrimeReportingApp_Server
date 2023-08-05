@@ -1,5 +1,6 @@
 import mysql.connector
 import bcrypt
+import re
 
 # MySQL configuration
 db_config = {
@@ -90,3 +91,14 @@ def password_to_hash(password):
 
 def hash_to_password(password, hashed):
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+
+def validate_phone_number(phone):
+    # Regular expression pattern for matching the phone number format
+    pattern = r'^(01|07|\+2541|\+2547)\d{8}$'
+
+    # Use re.match to check if the phone number matches the pattern
+    if re.match(pattern, phone):
+        return True
+    else:
+        return False

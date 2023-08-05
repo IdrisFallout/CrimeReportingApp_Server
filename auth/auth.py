@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from DatabaseModule.database import fetch_users, register_user, login_user, hash_to_password
+from DatabaseModule.database import fetch_users, register_user, login_user, hash_to_password, validate_phone_number
 
 auth = Blueprint('auth', __name__)
 
@@ -8,6 +8,9 @@ auth = Blueprint('auth', __name__)
 def login():
     phone = request.json['phone']
     pin = request.json['pin']
+    phone = str(phone)
+    if phone.startswith("0"):
+        phone = f'+254{phone[1:]}'
 
     if login_user(phone) is None:
         response = {
@@ -43,6 +46,16 @@ def register():
     phone = request.json['phone']
     full_name = request.json['full_name']
     pin = request.json['pin']
+
+    phone = str(phone)
+    if not validate_phone_number(phone):
+        response = {
+            'responseType': 'error',
+            'message': 'Validation Failed. Invalid Phone Number'
+        }
+        return jsonify(response), 200
+    if phone.startswith("0"):
+        phone = f'+254{phone[1:]}'
     if len(str(pin)) != 4:
         response = {
             'responseType': 'error',
