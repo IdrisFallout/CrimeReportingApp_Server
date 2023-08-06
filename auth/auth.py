@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from DatabaseModule.database import fetch_users, register_user, login_user, hash_to_password, validate_phone_number
+from DatabaseModule.database import fetch_users, register_user, login_user, hash_to_password, validate_phone_number, get_username
 
 auth = Blueprint('auth', __name__)
 
@@ -79,4 +79,24 @@ def register():
             'responseType': 'error',
             'message': 'Signup failed'
         }
+    return jsonify(response), 200
+
+
+@auth.route('/getusername', methods=['POST'])
+def getusername():
+    phone = request.json['phone']
+    phone = str(phone)
+    if phone.startswith("0"):
+        phone = f'+254{phone[1:]}'
+    full_name = get_username(phone)
+    if full_name is None:
+        response = {
+            'responseType': 'error',
+            'message': 'Invalid phone'
+        }
+        return jsonify(response), 200
+    response = {
+        'responseType': 'success',
+        'message': full_name
+    }
     return jsonify(response), 200

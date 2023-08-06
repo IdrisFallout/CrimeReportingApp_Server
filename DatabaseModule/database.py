@@ -84,6 +84,27 @@ def login_user(phone):
     return None  # Return None if there's an issue with the database connection
 
 
+def get_username(phone):
+    connection, cursor = connect_to_database()
+    if connection and cursor:
+        try:
+            query = "SELECT full_name FROM login_table WHERE phone = %s"
+            values = (phone,)
+            cursor.execute(query, values)
+            result = cursor.fetchone()
+            if result:
+                return result[0]  # Return the hashed password
+            else:
+                return None  # Return None if the phone number is not found
+        except mysql.connector.Error as err:
+            pass
+            # print("Error executing query: ", err)
+        finally:
+            cursor.close()
+            connection.close()
+    return None  # Return None if there's an issue with the database connection
+
+
 def password_to_hash(password):
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashed.decode('utf-8')
