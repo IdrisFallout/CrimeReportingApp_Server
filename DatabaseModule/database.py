@@ -1,13 +1,16 @@
+import os
+
 import mysql.connector
 import bcrypt
 import re
 
 # MySQL configuration
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'crime_reporting_db',
+    # use environment variables to store the database credentials
+    'host': os.environ.get('DB_HOST'),
+    'user': os.environ.get('DB_USER'),
+    'password': os.environ.get('DB_PASSWORD'),
+    'database': os.environ.get('DB_NAME'),
 }
 
 

@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  report_server:
+    build: .
+    container_name: report_server
+    volumes:
+      - /home/idrisfallout/Documents/Flask Projects/Docker-deploys/CrimeReportingApp/report_server:/app
+    environment:
+      - DB_HOST=report_db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=rEport@123
+      - DB_NAME=report_db
+    restart: unless-stopped
+    depends_on:
+      - report_db
+    networks:
+        - nginxproxymanager_network
+
+  report_db:
+    image: mariadb:10.5
+    container_name: report_db
+    volumes:
+      - /home/idrisfallout/Documents/Flask Projects/Docker-deploys/CrimeReportingApp/report_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rEport@123
+      - MYSQL_DATABASE=report_db
+    restart: unless-stopped
+    networks:
+        - nginxproxymanager_network

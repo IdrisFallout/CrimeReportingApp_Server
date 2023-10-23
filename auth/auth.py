@@ -95,6 +95,8 @@ def getusername():
             'message': 'Invalid phone'
         }
         return jsonify(response), 200
+    # print the first name
+    # full_name = full_name.split(" ")[0]
     response = {
         'responseType': 'success',
         'message': full_name
